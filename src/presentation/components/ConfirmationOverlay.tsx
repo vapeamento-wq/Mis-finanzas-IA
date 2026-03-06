@@ -7,11 +7,12 @@ interface ConfirmationOverlayProps {
     isOpen: boolean;
     isProcessing: boolean;
     data: ProcessedVoiceData | null;
+    errorMessage?: string | null;
     onConfirm: () => void;
     onCancel: () => void;
 }
 
-export function ConfirmationOverlay({ isOpen, isProcessing, data, onConfirm, onCancel }: ConfirmationOverlayProps) {
+export function ConfirmationOverlay({ isOpen, isProcessing, data, errorMessage, onConfirm, onCancel }: ConfirmationOverlayProps) {
     return (
         <AnimatePresence>
             {isOpen && (
@@ -75,8 +76,16 @@ export function ConfirmationOverlay({ isOpen, isProcessing, data, onConfirm, onC
                                 </div>
                             </div>
                         ) : (
-                            <div className="text-center py-6 text-rose-400">
-                                Error al entender la transacción.
+                            <div className="text-center py-6 flex flex-col items-center gap-4">
+                                <div className="text-rose-400 font-medium whitespace-pre-wrap">
+                                    {errorMessage || "Error al entender la transacción."}
+                                </div>
+                                <button
+                                    onClick={onCancel}
+                                    className="px-6 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-full transition-colors text-sm"
+                                >
+                                    Cerrar
+                                </button>
                             </div>
                         )}
                     </motion.div>

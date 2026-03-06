@@ -151,6 +151,7 @@ function App() {
                 isOpen={isOverlayOpen}
                 isProcessing={isProcessing || isListening}
                 data={extractedData}
+                errorMessage={error}
                 onConfirm={handleConfirmTransaction}
                 onCancel={resetData}
             />
