@@ -59,9 +59,10 @@ Asegúrate de deducir inteligentemente si es ingreso o gasto por el contexto (ej
                 const cleanJsonString = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
                 return JSON.parse(cleanJsonString) as ProcessedVoiceData;
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error processing voice/text with Gemini:', error);
-            throw new Error('Voice extraction failed.');
+            const apiMessage = error?.message || 'Error desconocido en Gemini';
+            throw new Error(`Falla en IA: ${apiMessage}`);
         }
     }
 }
