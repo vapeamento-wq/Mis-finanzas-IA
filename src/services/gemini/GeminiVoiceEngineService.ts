@@ -34,10 +34,20 @@ Asegúrate de deducir inteligentemente si es ingreso o gasto por el contexto (ej
                 const cleanJsonString = responseText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
                 return JSON.parse(cleanJsonString) as ProcessedVoiceData;
             } else {
+                let actualMimeType = "audio/mp3";
+                let base64Data = input;
+
+                // Attempt to parse standard Data URI -> data:audio/mp4;base64,AAAA...
+                const match = input.match(/^data:(.*?);base64,(.*)$/);
+                if (match && match.length === 3) {
+                    actualMimeType = match[1];
+                    base64Data = match[2];
+                }
+
                 const audioData = {
                     inlineData: {
-                        data: input,
-                        mimeType: "audio/mp3",
+                        data: base64Data,
+                        mimeType: actualMimeType,
                     },
                 };
                 const result = await model.generateContent([

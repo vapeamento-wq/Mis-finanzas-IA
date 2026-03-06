@@ -35,20 +35,20 @@ export function useVoiceEngine() {
             });
 
             mediaRecorder.addEventListener("stop", async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' }); // Gemini supports mp3, ogg, wav
+                const actualMimeType = mediaRecorder.mimeType || 'audio/webm';
+                const audioBlob = new Blob(audioChunks, { type: actualMimeType });
 
                 // Convert blob to Base64
                 const reader = new FileReader();
                 reader.readAsDataURL(audioBlob);
                 reader.onloadend = async () => {
+                    // Send the FULL data URI (includes mimeType)
                     const base64data = reader.result as string;
-                    // Extract just the base64 part, discarding "data:audio/mp3;base64,"
-                    const base64Audio = base64data.split(',')[1];
 
                     setIsProcessing(true);
                     setError(null);
                     try {
-                        const data = await voiceEngineService.processAudio(base64Audio, true);
+                        const data = await voiceEngineService.processAudio(base64data, true);
                         setExtractedData(data);
                     } catch (err: any) {
                         console.error(err);
