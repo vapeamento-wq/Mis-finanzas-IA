@@ -8,9 +8,9 @@ export class ProcessVoiceTransactionUseCase {
         private readonly transactionRepository: ITransactionRepository
     ) { }
 
-    async execute(audioBuffer: Buffer | string, accountId: string): Promise<Transaction> {
+    async execute(input: string, accountId: string, isAudioBase64: boolean = false): Promise<Transaction> {
         // 1. Process voice to extract transaction intent data
-        const voiceData = await this.voiceEngineService.processAudio(audioBuffer);
+        const voiceData = await this.voiceEngineService.processAudio(input, isAudioBase64);
 
         // 2. Map and create Transaction entity
         const transaction = new Transaction({
